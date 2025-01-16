@@ -12,20 +12,27 @@ interface ContentDisplayProps {
 }
 
 export default function ContentDisplay({ content, onTextSelect, selectedText }: ContentDisplayProps) {
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim()) {
+      onTextSelect(selection.toString().trim());
+    }
+  };
+
   const renderText = (text: string) => {
     if (!selectedText) return text;
-    const parts = text.split(selectedText)
+    
+    const parts = text.split(new RegExp(`(${selectedText})`, 'gi'));
     return parts.map((part, i) => (
-      <>
-        {part}
-        {i < parts.length - 1 && (
+      <span key={i}>
+        {part.toLowerCase() === selectedText.toLowerCase() ? (
           <span className="bg-yellow-500/20 px-1 rounded">
-            {selectedText}
+            {part}
           </span>
-        )}
-      </>
-    ))
-  }
+        ) : part}
+      </span>
+    ));
+  };
 
   return (
     <Card className="mb-6">
@@ -33,10 +40,10 @@ export default function ContentDisplay({ content, onTextSelect, selectedText }: 
         <CardTitle className="text-2xl">{content.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-8" onMouseUp={() => {
-          const selection = window.getSelection();
-          if (selection) onTextSelect(selection.toString());
-        }}>
+        <div 
+          className="space-y-8 selection:bg-yellow-500/20" 
+          onMouseUp={handleTextSelection}
+        >
           <section>
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <span className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-sm">1</span>

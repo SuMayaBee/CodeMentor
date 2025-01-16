@@ -27,8 +27,8 @@ const sidebarItems = [
     icon: Headphones
   },
   {
-    title: 'Project',
-    href: '/project',
+    title: 'Playground',
+    href: '/playground',
     icon: FolderGit2
   },
   {

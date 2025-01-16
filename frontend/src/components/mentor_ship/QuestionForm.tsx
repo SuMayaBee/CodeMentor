@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
-import { MessageSquare } from "lucide-react"
+import { Info, MessageSquare } from "lucide-react"
 import ReactMarkdown from 'react-markdown'
 
 interface QuestionFormProps {
@@ -14,10 +14,15 @@ interface QuestionFormProps {
   selectedText: string
 }
 
-export default function QuestionForm({ userId, contentId, selectedText }: QuestionFormProps) {
+export default function QuestionForm({ 
+  userId, 
+  contentId = '4a3b165c-fae2-4965-bfcc-7cf1af28d4d1', 
+  selectedText 
+}: QuestionFormProps) {
   const [question, setQuestion] = useState("")
   const [response, setResponse] = useState("")
   const [loading, setLoading] = useState(false)
+  const [isTextSelected, setIsTextSelected] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,32 +57,57 @@ export default function QuestionForm({ userId, contentId, selectedText }: Questi
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle>Ask a Question</CardTitle>
+          <CardTitle>Ask AI Mentor</CardTitle>
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mt-2">
+            <div className="flex items-center gap-2 text-blue-500">
+              <Info className="h-5 w-5" />
+              <p className="text-sm font-medium">How to ask questions:</p>
+            </div>
+            <ol className="text-sm text-muted-foreground mt-2 ml-6 list-decimal">
+              <li>Select any text from the content</li>
+              <li>Type your question about the selected text</li>
+              <li>Click "Ask Question" to get AI assistance</li>
+            </ol>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <Textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask about the selected text..."
+              placeholder={selectedText ? "What would you like to ask about the selected text?" : "Please select text first..."}
               className="min-h-[100px] resize-none"
-              disabled={!selectedText}
+              disabled={!selectedText || loading}
             />
+            
+            {selectedText && (
+              <div className="p-3 bg-muted rounded-lg border border-border">
+                <p className="text-sm font-medium">Selected Context:</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <Spinner />
+                      Processing...
+                    </span>
+                  ) : (
+                    selectedText
+                  )}
+                </p>
+              </div>
+            )}
+
             <Button 
               type="submit" 
-              disabled={loading || !selectedText}
+              disabled={loading || !selectedText || !question}
               className="w-full"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
                   <Spinner />
-                  Generating...
+                  Generating Response...
                 </span>
               ) : (
-                <span className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  Ask Question
-                </span>
+                "Ask Question"
               )}
             </Button>
           </form>
