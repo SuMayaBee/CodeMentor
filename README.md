@@ -1,4 +1,8 @@
+<div align="center">
+  
 # CodeMentor
+
+</div>
 
 In today’s fast-paced tech landscape, beginner coders often find themselves overwhelmed with the vast amount of information available online. They struggle to create a structured learning path, face challenges understanding complex concepts, and lack immediate, context-sensitive assistance when learning to code. This lack of personalized mentorship often leads to frustration and a slowed learning process.
 
@@ -27,7 +31,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Prisma:** Prisma ORM interacts with PostgreSQL to efficiently manage and query the user’s roadmap data.
 
 <div align="center">
+  
 ## 2. Content Generation (Theory, Syntax, Example Code):
+
 </div>
 
 **Feature Description:** Once the user selects a specific topic (e.g., Python loops), the platform generates detailed content, including theory, syntax, and example code.
@@ -47,7 +53,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Prisma:** Prisma is used to manage and query content stored in the database, ensuring smooth fetching and updating of content.
 
 <div align="center">
+  
 ## 3. Code Editor and CodeMentor:
+
 </div>
 
 **Feature Description:** The platform provides a code editor (Monaco Editor) where users can write code. They can select a portion of the code and ask specific questions. The system will process the query and provide feedback, helping them learn.
@@ -62,7 +70,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Prisma:** Prisma is used to save the user’s code snippets and interactions into the database for future retrieval.
 
 <div align="center">
+  
 ## 4. Code Mentorship Agent:
+
 </div>
 
 **Feature Description:** Users can ask questions about specific parts of their code. The system identifies the selected code, processes the question, and provides relevant guidance, explanations, or suggestions.
@@ -77,7 +87,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Prisma:** Prisma is used for efficient database operations, ensuring that questions, responses, and code snippets are stored and retrieved smoothly.
 
 <div align="center">
+  
 ## 5. User Authentication and Profile Management:
+
 </div>
 
 **Feature Description:** Users can create accounts, log in, and store their learning progress, including roadmaps, content, and interactions. Each user has a personalized profile to track their learning journey.
