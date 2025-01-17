@@ -9,7 +9,6 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 [Demonstration Video.](https://drive.google.com/file/d/1XSD-Qzh8dePoEGp-F5P4Sjg_LL9fOj7D/view)
 
 
-
 ## Prerequisites
 
 Before you start, ensure that you have the following installed:
