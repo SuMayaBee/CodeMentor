@@ -6,7 +6,7 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 
 ## Technical Documentation and Demonstration Video
 [Technical Documentation.](https://docs.google.com/document/d/1nrV6MDjtKjIvcTu4MP6rfeH-4dtHlxKB60Ujx3i25fw/edit?usp=sharing)\
-[Demonstration Video.](https://drive.google.com/file/d/1Q9NrAw2ibKMKaH7H8r93Cpr6N4MOZ3Xb/view?usp=sharing)
+[Demonstration Video.](https://drive.google.com/file/d/1XSD-Qzh8dePoEGp-F5P4Sjg_LL9fOj7D/view)
 
 
 
