@@ -4,7 +4,7 @@ In today’s fast-paced tech landscape, beginner coders often find themselves ov
 
 CodeMentor is designed to bridge these gaps by offering an AI-powered, interactive learning platform that personalizes the learning experience for each user. With features tailored to beginners, it provides a structured roadmap, instant content generation, real-time code feedback, and mentorship—making learning both easier and more engaging. Here's how it works:
 
-## 1. User Roadmap Creation:
+<center> ## 1. User Roadmap Creation: </center>
 **Feature Description:** Users can create personalized roadmaps for learning a specific programming language or concept, such as "I want to learn C++." The roadmap consists of a list of topics (e.g., syntax, loops, functions) tailored to the user's learning journey.
 
 **Stack Usage:**
