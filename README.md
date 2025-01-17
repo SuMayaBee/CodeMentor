@@ -21,14 +21,16 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 
 **Feature Description:** Users can create personalized roadmaps for learning a specific programming language or concept, such as "I want to learn C++." The roadmap consists of a list of topics (e.g., syntax, loops, functions) tailored to the user's learning journey.
 
-![Screenshot 2025-01-17 234545](https://github.com/user-attachments/assets/ef1c401e-26e8-4cb3-8d37-6d714cd2a601)
-
-
 **Stack Usage:**
 - **Frontend (Next.js):** Users input their desired learning path, and the frontend sends a request to the backend to generate the roadmap.
 - **Backend (FastAPI):** FastAPI handles the incoming request, triggering the Roadmap Agent (powered by OpenAI Swarm) to generate a topic list for the selected language.
 - **Database (PostgreSQL):** The generated roadmap (topics) is stored in PostgreSQL under the user's profile for easy retrieval.
 - **Prisma:** Prisma ORM interacts with PostgreSQL to efficiently manage and query the user’s roadmap data.
+
+![Screenshot 2025-01-17 234545](https://github.com/user-attachments/assets/ef1c401e-26e8-4cb3-8d37-6d714cd2a601)
+
+
+
 
 <div align="center">
   
@@ -37,11 +39,6 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 </div>
 
 **Feature Description:** Once the user selects a specific topic (e.g., Python loops), the platform generates detailed content, including theory, syntax, and example code.
-
-![Screenshot 2025-01-17 234725](https://github.com/user-attachments/assets/b4d03347-c242-4f15-98db-07b8f1cf010b)
-
-![Screenshot 2025-01-17 234742](https://github.com/user-attachments/assets/042a09a8-1287-459b-868f-aadd766fdbe5)
-
 
 **Stack Usage:**
 - **Frontend (Next.js):** The user selects a topic, and the frontend requests content generation via the backend. The request includes the topic for which content (theory, syntax, example) needs to be created.
@@ -52,6 +49,13 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Database (PostgreSQL):** Each piece of content (theory, syntax, and example) is saved in the database, associating it with the user’s profile and selected topic.
 - **Prisma:** Prisma is used to manage and query content stored in the database, ensuring smooth fetching and updating of content.
 
+![Screenshot 2025-01-17 234725](https://github.com/user-attachments/assets/b4d03347-c242-4f15-98db-07b8f1cf010b)
+
+![Screenshot 2025-01-17 234742](https://github.com/user-attachments/assets/042a09a8-1287-459b-868f-aadd766fdbe5)
+
+
+
+
 <div align="center">
   
 ## 3. Code Editor and CodeMentor:
@@ -60,14 +64,16 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 
 **Feature Description:** The platform provides a code editor (Monaco Editor) where users can write code. They can select a portion of the code and ask specific questions. The system will process the query and provide feedback, helping them learn.
 
-![Screenshot 2025-01-17 235222](https://github.com/user-attachments/assets/0f504a5c-8ea1-45aa-82d3-b9a254f2153f)
-
-
 **Stack Usage:**
 - **Frontend (Next.js + Monaco Editor):** Monaco Editor is embedded in the frontend, enabling users to write and edit code. The user selects a portion of the code and submits a question.
 - **Backend (FastAPI):** FastAPI handles the query by sending it to the Mentorship Agent from OpenAI Swarm, which processes the selected code and generates an answer.
 - **Database (PostgreSQL):** The Q&A interaction (question and response) is saved in PostgreSQL, allowing the user to refer back to it later.
 - **Prisma:** Prisma is used to save the user’s code snippets and interactions into the database for future retrieval.
+
+![Screenshot 2025-01-17 235222](https://github.com/user-attachments/assets/0f504a5c-8ea1-45aa-82d3-b9a254f2153f)
+
+
+
 
 <div align="center">
   
@@ -77,14 +83,16 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 
 **Feature Description:** Users can ask questions about specific parts of their code. The system identifies the selected code, processes the question, and provides relevant guidance, explanations, or suggestions.
 
-![Screenshot 2025-01-17 235305](https://github.com/user-attachments/assets/31fef5eb-7d8c-4b5a-8ab6-3b1029a6d537)
-
 
 **Stack Usage:**
 - **Frontend (Next.js + Monaco Editor):** The Monaco Editor allows users to highlight a piece of code and ask a question about it. The request is sent to the backend.
 - **Backend (FastAPI):** FastAPI handles the request and passes it to the Mentorship Agent for analysis. The agent responds with feedback or clarification on the selected code.
 - **Database (PostgreSQL):** User-generated questions and the feedback received are stored in the database for reference and can be revisited by the user later.
 - **Prisma:** Prisma is used for efficient database operations, ensuring that questions, responses, and code snippets are stored and retrieved smoothly.
+
+![Screenshot 2025-01-17 235305](https://github.com/user-attachments/assets/31fef5eb-7d8c-4b5a-8ab6-3b1029a6d537)
+
+
 
 <div align="center">
   
