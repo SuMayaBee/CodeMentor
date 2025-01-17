@@ -5,7 +5,7 @@ In today’s fast-paced tech landscape, beginner coders often find themselves ov
 CodeMentor is designed to bridge these gaps by offering an AI-powered, interactive learning platform that personalizes the learning experience for each user. With features tailored to beginners, it provides a structured roadmap, instant content generation, real-time code feedback, and mentorship—making learning both easier and more engaging.
 
 ## Technical Documentation and Demonstration Video
-[Technical Documentation.](https://docs.google.com/document/d/1nrV6MDjtKjIvcTu4MP6rfeH-4dtHlxKB60Ujx3i25fw/edit?usp=sharing)
+[Technical Documentation.](https://docs.google.com/document/d/1nrV6MDjtKjIvcTu4MP6rfeH-4dtHlxKB60Ujx3i25fw/edit?usp=sharing)\
 [Demonstration Video.](https://drive.google.com/file/d/1Q9NrAw2ibKMKaH7H8r93Cpr6N4MOZ3Xb/view?usp=sharing)
 
 
@@ -29,7 +29,7 @@ Before you start, ensure that you have the following installed:
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    ```
-    
+
 
 
 3. Build the Docker images:
@@ -48,10 +48,10 @@ Before you start, ensure that you have the following installed:
 
 The CodeMentor project was developed by the following team members:
 
-- **MD Tamim Sarkar** - Team Lead, Role: AI and Backend
-- **Sumaiya Islam** - Member, Role: Frontend and Backend
-- **Fabliha Sarwar** - Member, Role: Backend
-- **Abdullah Al Jilan** - Member, Role: Backend
+- **MD Tamim Sarkar** - Team Lead, Role: AI and Backend [Linkedin](https://www.linkedin.com/in/tam1m/)
+- **Sumaiya Islam** - Member, Role: Frontend and Backend [Linkedin](https://www.linkedin.com/in/sumaiya-islam-freelancer/)
+- **Fabliha Sarwar** - Member, Role: Backend [Linkedin](https://www.linkedin.com/in/fabliha-afaf-sarwar/)
+- **Abdullah Al Jilan** - Member, Role: Backend [Linkedin](https://www.linkedin.com/in/abdullah-all-jilan/)
 
 Feel free to add or update your details in this section!
 
