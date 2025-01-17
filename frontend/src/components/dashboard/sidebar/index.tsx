@@ -7,7 +7,8 @@ import {
   BookText, 
   Headphones, 
   FolderGit2,
-  Settings 
+  Settings, 
+  PackageOpen
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -32,9 +33,9 @@ const sidebarItems = [
     icon: FolderGit2
   },
   {
-    title: 'Settings',
-    href: '/settings',
-    icon: Settings
+    title: 'Public',
+    href: '/public',
+    icon: PackageOpen
   }
 ];
 

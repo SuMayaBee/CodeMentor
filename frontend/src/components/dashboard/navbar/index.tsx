@@ -1,6 +1,8 @@
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { User } from '@/types/user';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
+import Image from 'next/image';
+import Logo from "@/assets/logo.svg"
 
 interface NavbarProps {
   userData: User;
@@ -14,6 +16,13 @@ const Navbar = ({ userData }: NavbarProps) => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 h-16">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center space-x-6">
+          <Image
+              src={Logo}
+              alt="Logo"
+              width={36}
+              height={36}
+              className="mr-2"
+            />
             <h2 className="text-xl font-bold">
               CodeMentor
             </h2>

@@ -43,16 +43,14 @@ export default function Landing() {
           </div>
         </div>
         <h1 className="text-2xl font-medium text-center mt-16">
-          A Collaborative + AI-Powered Code Environment
+        CodeMentor - An AI Assisted Learning Platform for Beginners
         </h1>
         {/* <p className="text-muted-foreground mt-4 text-center ">
           Sandbox is an open-source cloud-based code editing environment with
           custom AI code autocompletion and real-time collaboration.
         </p> */}
         <p className="text-muted-foreground mt-4 text-center ">
-          A cloud-based code editor featuring real-time collaboration,
-          intelligent code autocompletion, and an AI assistant to help you code
-          faster and smarter.
+        CodeMentor simplifies the journey of learning programming for beginners by offering personalized, interactive, and AI-powered guidance. It helps users overcome challenges, find structured learning paths, and gain immediate support when facing coding obstacles
         </p>
         <div className="mt-8 flex space-x-4">
           <Link href="/sign-up">
