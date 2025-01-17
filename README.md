@@ -23,6 +23,7 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 **Feature Description:** Once the user selects a specific topic (e.g., Python loops), the platform generates detailed content, including theory, syntax, and example code.
 
 ![Screenshot 2025-01-17 234725](https://github.com/user-attachments/assets/b4d03347-c242-4f15-98db-07b8f1cf010b)
+
 ![Screenshot 2025-01-17 234742](https://github.com/user-attachments/assets/042a09a8-1287-459b-868f-aadd766fdbe5)
 
 
