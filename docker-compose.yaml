@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY} 
+    ports:
+      - "8000:8000" # Map backend port
+    volumes:
+      - ./backend:/app # Enable live code updates
+    command: python main.py
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000" # Map frontend port
+    volumes:
+      - ./frontend:/app # Enable live code updates
+    command: npm run dev
