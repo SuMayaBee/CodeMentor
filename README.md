@@ -29,6 +29,8 @@ Before you start, ensure that you have the following installed:
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    ```
+    
+
 
 3. Build the Docker images:
    ```bash
