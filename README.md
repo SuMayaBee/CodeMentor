@@ -26,8 +26,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Database (PostgreSQL):** The generated roadmap (topics) is stored in PostgreSQL under the user's profile for easy retrieval.
 - **Prisma:** Prisma ORM interacts with PostgreSQL to efficiently manage and query the user’s roadmap data.
 
-
+<div align="center">
 ## 2. Content Generation (Theory, Syntax, Example Code):
+</div>
 
 **Feature Description:** Once the user selects a specific topic (e.g., Python loops), the platform generates detailed content, including theory, syntax, and example code.
 
@@ -45,8 +46,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Database (PostgreSQL):** Each piece of content (theory, syntax, and example) is saved in the database, associating it with the user’s profile and selected topic.
 - **Prisma:** Prisma is used to manage and query content stored in the database, ensuring smooth fetching and updating of content.
 
-
+<div align="center">
 ## 3. Code Editor and CodeMentor:
+</div>
 
 **Feature Description:** The platform provides a code editor (Monaco Editor) where users can write code. They can select a portion of the code and ask specific questions. The system will process the query and provide feedback, helping them learn.
 
@@ -59,8 +61,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Database (PostgreSQL):** The Q&A interaction (question and response) is saved in PostgreSQL, allowing the user to refer back to it later.
 - **Prisma:** Prisma is used to save the user’s code snippets and interactions into the database for future retrieval.
 
-
+<div align="center">
 ## 4. Code Mentorship Agent:
+</div>
 
 **Feature Description:** Users can ask questions about specific parts of their code. The system identifies the selected code, processes the question, and provides relevant guidance, explanations, or suggestions.
 
@@ -73,8 +76,9 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 - **Database (PostgreSQL):** User-generated questions and the feedback received are stored in the database for reference and can be revisited by the user later.
 - **Prisma:** Prisma is used for efficient database operations, ensuring that questions, responses, and code snippets are stored and retrieved smoothly.
 
-
+<div align="center">
 ## 5. User Authentication and Profile Management:
+</div>
 
 **Feature Description:** Users can create accounts, log in, and store their learning progress, including roadmaps, content, and interactions. Each user has a personalized profile to track their learning journey.
 
