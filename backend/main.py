@@ -6,6 +6,7 @@ from routers.topics import router as topic_router
 from routers.mentorlogs import router as mentor_log_router
 from routers.quiz import router as quiz_router 
 from routers.contentai import router as newcontent_router 
+from routers.practiceai import router as practiceai_router 
 
 app = FastAPI(
     title="CodeMentor API",

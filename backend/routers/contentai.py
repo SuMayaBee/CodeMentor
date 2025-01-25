@@ -29,6 +29,7 @@ class SourceInput(BaseModel):
 
 class ChatInput(BaseModel):
     prompt: str
+    topic: str 
     chat_history: list[dict]
 
 class TopicInput(BaseModel):
@@ -105,7 +106,7 @@ async def chat(input: ChatInput):
         conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
         response = conversation_rag_chain.invoke({
             "chat_history": chat_history,
-            "input": input.prompt,
+            "input": f"Your task is to teach the user the topic {input.topic}. This is the {chat_history}. If the chat history covers concept, programming and example, then the user learnt everything for now. Tell that he learnt the topic. If not.   Teach him slowly. Also after explaining something, ask him 2 or 3 question with multiple choice. Analysis the chat history provided to check if the user is answering correct or not. If he answers correct, explain further on the topic. After explaining the concept, move on to code part. and show some example codes. Then ask for output of the code. Later at the end of your chat stream, tell the user to point out error in a code in MCQ. Finally when y think the user has learnt it everything, show a ending message.",
         })
 
         # Update chat history
@@ -273,4 +274,6 @@ async def retake(input: RetakeBody):
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}") 
+    
+
