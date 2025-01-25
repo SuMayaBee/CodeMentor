@@ -1,0 +1,67 @@
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String        @id @default(uuid())
+  clerkUserId String       @unique
+  name        String?
+  email       String       @unique
+  imageUrl    String?
+  credit      Float?       @default(0)
+  topics      Topic[]
+  contents    Content[]
+  mentorLogs  MentorLog[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  promptName  String
+  topicList   String
+  public      Boolean  @default(false)
+  userId      String
+  user        User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([userId])
+}
+
+model Content {
+  id             String      @id @default(uuid())
+  title          String
+  prompt         String
+  contentTheory  String?
+  contentCodes   String?
+  contentSyntax  String?
+  public         Boolean     @default(false)
+  userId         String
+  user           User        @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  mentorLogs     MentorLog[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  @@index([userId])
+}
+
+model MentorLog {
+  id         String   @id @default(uuid())
+  title      String?
+  context    String
+  question   String
+  response   String?
+  userId     String
+  user       User     @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+  contentId  String
+  content    Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@index([userId])
+  @@index([contentId])
+}
