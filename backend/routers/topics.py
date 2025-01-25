@@ -88,10 +88,6 @@ class QueryResponse(BaseModel):
     response: str
 
 
-# import os
-# os.environ["OPENAI_API_KEY"] = "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"
-# api_key = os.getenv("OPENAI_API_KEY")
-
 
 load_dotenv()
 client = Swarm()
