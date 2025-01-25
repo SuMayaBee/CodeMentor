@@ -19,9 +19,7 @@ retriever = None
 
 router = APIRouter(prefix="/newcontent", tags=["newcontent"])
 
-import os
-os.environ["OPENAI_API_KEY"] = "openai_api_key"
-api_key = os.getenv("OPENAI_API_KEY")
+
 
 llm = ChatOpenAI(model="gpt-4o")
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
