@@ -31,6 +31,21 @@ class ChatInput(BaseModel):
     prompt: str
     chat_history: list[dict]
 
+class TopicInput(BaseModel):
+    specific_section: str 
+    chat_history: list[dict]
+
+class QuizBody(BaseModel):
+    chat_history: list[dict]
+
+class QuizResult(BaseModel):
+    wrong_text: str
+    chat_history: list[dict]
+
+
+class RetakeBody(BaseModel):
+    chat_history: list[dict]
+
 # Helper Functions
 def process_documents(sources):
     documents = []
@@ -47,7 +62,7 @@ def process_documents(sources):
 
 def get_conversational_rag_chain(retriever):
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Answer the user's questions based on the below context:\n\n{context}"),
+        ("system", "Teach the user on the certain topic based on the context. Also give him a question after each response. If the user is correct move ahead.:\n\n{context}"),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
     ])
@@ -95,6 +110,157 @@ async def chat(input: ChatInput):
 
         # Update chat history
         chat_history.append(HumanMessage(content=input.prompt))
+        chat_history.append(AIMessage(content=response["answer"]))
+
+        # Return updated history and response
+        return {
+            "response": response["answer"],
+            "chat_history": [
+                {"role": "ai" if isinstance(msg, AIMessage) else "human", "content": msg.content}
+                for msg in chat_history
+            ],
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
+
+
+
+@router.post("/topic_list")
+async def topic(input: TopicInput):
+    global retriever
+    if retriever is None:
+        raise HTTPException(status_code=400, detail="Retriever not initialized. Please load sources first.")
+
+    try:
+        # Reconstruct chat history
+        chat_history = [
+            AIMessage(content=msg["content"]) if msg["role"] == "ai" else HumanMessage(content=msg["content"])
+            for msg in input.chat_history
+        ]
+
+        # Generate response
+        retriever_chain = get_context_retriever_chain(retriever)
+        conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+        response = conversation_rag_chain.invoke({
+            "chat_history": chat_history,
+            "input":f"Generate a topic list on the specific part specified or whole section. Use only bulletin points of number. Dont generate other things. Specified Section: {input.specific_section}",
+        })
+
+        # Update chat history
+        chat_history.append(AIMessage(content=response["answer"]))
+
+        # Return updated history and response
+        return {
+            "response": response["answer"],
+            "chat_history": [
+                {"role": "ai" if isinstance(msg, AIMessage) else "human", "content": msg.content}
+                for msg in chat_history
+            ],
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
+
+
+@router.post("/take_quiz")
+async def quiz(input: QuizBody):
+    global retriever
+    if retriever is None:
+        raise HTTPException(status_code=400, detail="Retriever not initialized. Please load sources first.")
+
+    try:
+        # Reconstruct chat history
+        chat_history = [
+            AIMessage(content=msg["content"]) if msg["role"] == "ai" else HumanMessage(content=msg["content"])
+            for msg in input.chat_history
+        ]
+
+        # Generate response
+        retriever_chain = get_context_retriever_chain(retriever)
+        conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+        response = conversation_rag_chain.invoke({
+            "chat_history": chat_history,
+            "input":f"Generate 15 Multiple Choice Questions based on the chat history and also the context. Moreover, after each question say the answer too. put the answer in /box() with the number inside. so if question 1's answer is A. then /box(1A)",
+        })
+
+        # Update chat history
+        chat_history.append(AIMessage(content=response["answer"]))
+
+        # Return updated history and response
+        return {
+            "response": response["answer"],
+            "chat_history": [
+                {"role": "ai" if isinstance(msg, AIMessage) else "human", "content": msg.content}
+                for msg in chat_history
+            ],
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
+
+
+@router.post("/evaluate_quiz")
+async def evaluate(input: QuizResult):
+    global retriever
+    if retriever is None:
+        raise HTTPException(status_code=400, detail="Retriever not initialized. Please load sources first.")
+
+    try:
+        # Reconstruct chat history
+        chat_history = [
+            AIMessage(content=msg["content"]) if msg["role"] == "ai" else HumanMessage(content=msg["content"])
+            for msg in input.chat_history
+        ]
+
+        # Generate response
+        retriever_chain = get_context_retriever_chain(retriever)
+        conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+        response = conversation_rag_chain.invoke({
+            "chat_history": chat_history,
+            "input":f"These are the questions i got wrong in the quiz. {input.wrong_text}. Now teach me those questions.",
+        })
+
+        # Update chat history
+        chat_history.append(HumanMessage(content=f"(I got these questions wrong. {input.wrong_text})"))
+        chat_history.append(AIMessage(content=response["answer"]))
+
+        # Return updated history and response
+        return {
+            "response": response["answer"],
+            "chat_history": [
+                {"role": "ai" if isinstance(msg, AIMessage) else "human", "content": msg.content}
+                for msg in chat_history
+            ],
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
+
+
+
+@router.post("/retake_quiz")
+async def retake(input: RetakeBody):
+    global retriever
+    if retriever is None:
+        raise HTTPException(status_code=400, detail="Retriever not initialized. Please load sources first.")
+
+    try:
+        # Reconstruct chat history
+        chat_history = [
+            AIMessage(content=msg["content"]) if msg["role"] == "ai" else HumanMessage(content=msg["content"])
+            for msg in input.chat_history
+        ]
+
+        # Generate response
+        retriever_chain = get_context_retriever_chain(retriever)
+        conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+        response = conversation_rag_chain.invoke({
+            "chat_history": chat_history,
+            "input":f"Generate me a quiz again on 15 questions but these time generate 70% questions on the topic i got wrong. Moreover, after each question say the answer too. put the answer in /box() with the number inside. so if question 1's answer is A. then /box(1A)",
+        })
+
+        # Update chat history
         chat_history.append(AIMessage(content=response["answer"]))
 
         # Return updated history and response

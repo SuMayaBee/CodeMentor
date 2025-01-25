@@ -1,12 +1,14 @@
 from langchain_openai import ChatOpenAI
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader
-import random
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_community.document_loaders import WebBaseLoader, PyPDFLoader, YouTubeLoader
+from langchain.chains import create_history_aware_retriever
+from langchain_core.messages import AIMessage, HumanMessage
+
 
 # Initialize LLM
 llm = ChatOpenAI(model="gpt-4o")
@@ -16,27 +18,24 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20
 
 # Create system prompt
 system_prompt = (
-    "You are a mentor who teaches step-by-step, interactively, and adaptively. "
+    "You are a mentor who teaches step-by-step, interactively and adaptively. "
     "Use the provided context to explain the topic clearly. After each explanation, "
-    "ask the user a relevant question to ensure they are following. If the user doesn't understand, "
-    "re-explain with a simpler approach. Provide practical examples or challenges to reinforce learning. "
-    "If the user performs poorly, adapt and try another approach. Continue teaching until the user understands."
+    "ask the user a relevant question to ensure they are following. Your questions "
+    "should be conversational and engaging, not robotic. If the user doesn't understand, "
+    "re-explain with a simpler approach. Keep explanations concise (three sentences max)."
+    "Ask the user if they understood a topic. If they did, advance with the topic. Then after giving them the basics, "
+    "show some coding examples and ask quizzes. If they answer correctly, go further. If they answer wrong, repeat the explanation."
 )
 
-# Create prompt template
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
-)
-
+# Process documents, including handling YouTube links
 def process_documents(sources):
     documents = []
 
     for source in sources:
-        if source.endswith('.pdf'):
+        if source.endswith(".pdf"):
             loader = PyPDFLoader(source)
+        elif "youtube.com" in source or "youtu.be" in source:
+            loader = YouTubeLoader(source)
         else:
             loader = WebBaseLoader(source)
         documents.extend(loader.load())
@@ -46,49 +45,61 @@ def process_documents(sources):
 
     return vectorstore.as_retriever()
 
-# Function to test the user's understanding
-def test_user(topic, llm):
-    questions_prompt = f"Generate 3 questions to test the user's understanding of '{topic}'."
-    questions = llm.generate({"input": questions_prompt})["answer"]
+# Create a conversational RAG chain
+def get_conversational_rag_chain(retriever):
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Answer the user's questions based on the below context:\n\n{context}"),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("user", "{input}"),
+    ])
+    stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
+    return create_retrieval_chain(retriever, stuff_documents_chain)
 
-    print("Let's test your understanding!")
-    for idx, question in enumerate(questions.split("\n"), start=1):
-        print(f"Question {idx}: {question}")
-        user_answer = input("Your Answer: ").strip().lower()
-        if "correct" in user_answer or "yes" in user_answer:
-            print("Great job! You got it right!")
-        else:
-            print("Hmm, that's not correct. Let's go over this again.")
+# Create a context-aware retriever chain
+def get_context_retriever_chain(retriever):
+    prompt = ChatPromptTemplate.from_messages([
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("user", "{input}"),
+        ("user", "Based on the conversation, generate a search query to get relevant information."),
+    ])
+    return create_history_aware_retriever(llm, retriever, prompt)
 
-# Main function to facilitate teaching
-def teach_topic(sources, topic):
+# Get response from the RAG chain
+def get_response(user_query, retriever, chat_history):
+    retriever_chain = get_context_retriever_chain(retriever)
+    conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+    response = conversation_rag_chain.invoke({
+        "chat_history": chat_history,
+        "input": user_query,
+    })
+    return response["answer"]
+
+# Main teaching function
+def teach_topic(sources, topic, chat_history=[]):
+    # Process sources
     retriever = process_documents(sources)
-    question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
-    while True:
-        # Teach and explain
-        results = rag_chain.invoke({"input": topic})
-        explanation = results["answer"]
-        print(f"\nExplanation:\n{explanation}")
-
-        # Test user understanding
-        test_user(topic, llm)
-
-        # Check user progress
-        user_feedback = input("\nDo you feel confident about this topic now? (yes/no): ").strip().lower()
-        if user_feedback == "yes":
-            print("Great! You've mastered this topic. Moving on to the next!")
-            break
-        else:
-            print("No worries, let's go over it again with a simpler explanation.")
+    # Get response
+    response = get_response(topic, retriever, chat_history)
+    return response
 
 # Specify sources
 sources = [
-    "/home/ubantu/vivasoft/CodeMentor/backend/routers/Tutorial_EDIT.pdf",
-    "https://en.wikipedia.org/wiki/Cat"
+    "https://www.youtube.com/watch?v=ISBIht69fkE"
 ]
 
-# Example usage
-topic = "Teach me about loops"
-teach_topic(sources, topic)
+retriever = process_documents(sources)
+
+
+chat_history = [AIMessage(content="tell me about the blackbird")]
+
+while True:
+
+    # Example usage
+    prompt = input("Input: ")
+
+    chat_history.append(HumanMessage(content=prompt)) 
+
+    response = teach_topic(sources, prompt, chat_history)
+    chat_history.append(AIMessage(content=response)) 
+    print(response)
