@@ -30,6 +30,8 @@ app.include_router(topic_router)
 app.include_router(mentor_log_router)
 app.include_router(quiz_router)
 app.include_router(newcontent_router)
+app.include_router(practiceai_router)
+
 
 if __name__ == "__main__":
     import uvicorn

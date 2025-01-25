@@ -35,6 +35,11 @@ class QueryRequestModify(BaseModel):
     user_wants: str # easier/harder 
   
 
+class LiveRequest(BaseModel):
+    given_problem: str 
+    topic: str 
+    language: str 
+    user_code: str 
 
 class QueryResponse(BaseModel):
     response: str
@@ -53,7 +58,7 @@ problem_modifying_agent = Agent(
 
 
 problem_solve_helper = Agent(
-    instructions="You will be given the current progress of the user. "
+    instructions="You will be given the current progress of the user (the code, the user is writing).  Based on the code the user is writing. Give a guideline if the progress code of the user isn't on the right way. Or say something nice if the user is doing good and on the right track. Also if you the think the whole code is done. maybe comment on the time complexity of the problem."
 )
 
 
@@ -78,9 +83,9 @@ async def create_a_problem(request: QueryRequestModify):
 
 
 @router.post("/live_tracking")
-async def create_a_problem(request: QueryRequestModify):
+async def create_a_problem(request: LiveRequest):
     response = client.run(
-            agent=problem_modifying_agent,
+            agent=problem_solve_helper,
             messages=[{"role": "user", "content": f"user specification: {request.user_specification}. Topic and language: {request.topic} {request.language}. Difficulty: {request.difficulty}. But user wants {request.user_wants} problem"}],
         )
 
