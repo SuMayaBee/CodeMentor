@@ -5,6 +5,7 @@ from routers.contents import router as content_router
 from routers.topics import router as topic_router
 from routers.mentorlogs import router as mentor_log_router
 from routers.quiz import router as quiz_router 
+from routers.contentai import router as newcontent_router 
 
 app = FastAPI(
     title="CodeMentor API",
@@ -27,6 +28,7 @@ app.include_router(content_router)
 app.include_router(topic_router)
 app.include_router(mentor_log_router)
 app.include_router(quiz_router)
+app.include_router(newcontent_router)
 
 if __name__ == "__main__":
     import uvicorn
