@@ -8,7 +8,8 @@ import {
   Headphones, 
   FolderGit2,
   Settings, 
-  PackageOpen
+  PackageOpen,
+  Upload
 } from 'lucide-react';
 
 const sidebarItems = [
@@ -36,6 +37,11 @@ const sidebarItems = [
     title: 'Public',
     href: '/public',
     icon: PackageOpen
+  },
+  {
+    title: 'Material upload',
+    href: '/material_upload',
+    icon: Upload
   }
 ];
 
