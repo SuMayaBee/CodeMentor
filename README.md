@@ -56,12 +56,33 @@ https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
 https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
+<div align="center">
+
+## 4. User Preference-Based Problem Generation
+
+</div>
+
+**Feature Description:** User Preference-Based Problem Generation is a versatile feature of Code Mentor, designed to cater to individual learning preferences. The platform allows users to generate problems based on their specific interests and needs. Moreover, each problem's difficulty can be adjusted—leveled up or down—based on the user's preference, ensuring that learners are consistently challenged at the right level. This adaptive feature empowers users to customize their learning experience and progress at their own pace, enhancing their overall mastery of coding concepts.
+
+
+![Screenshot 2025-01-26 093111](https://github.com/user-attachments/assets/7dc77ab0-6a1e-4100-aeea-94c9d0842122)
+
+## 4. AI Voice mentor
+
+</div>
+
+**Feature Description:** This feature provides an interactive voice assistant that answers questions about coding challenges. Users can ask for guidance and receive verbal explanations and support, enhancing their understanding and learning experience. The AI Voice Mentor offers real-time, spoken feedback and hints, making it a valuable tool for hands-free assistance while coding.
+
+
+
+![Screenshot 2025-01-26 093524](https://github.com/user-attachments/assets/be8edee9-b7f0-4252-97bf-bd49742e478f)
+
 
 
 
 <div align="center">
 
-## 4. User Roadmap Creation:
+## 5. User Roadmap Creation:
 
 </div>
 
@@ -81,7 +102,7 @@ https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 <div align="center">
   
-## 5. Content Generation (Theory, Syntax, Example Code):
+## 6. Content Generation (Theory, Syntax, Example Code):
 
 </div>
 
@@ -105,7 +126,7 @@ https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 <div align="center">
   
-## 6. Code Editor and CodeMentor:
+## 7. Code Editor and CodeMentor:
 
 </div>
 
@@ -124,7 +145,7 @@ https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 <div align="center">
   
-## 7. Code Mentorship Agent:
+## 8. Code Mentorship Agent:
 
 </div>
 
@@ -143,7 +164,7 @@ https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 <div align="center">
   
-## 8. User Authentication and Profile Management:
+## 9. User Authentication and Profile Management:
 
 </div>
 
