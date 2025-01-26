@@ -28,6 +28,22 @@ Here's how it works:
 https://github.com/user-attachments/assets/f55364ca-d12b-4b00-bdf6-aadcc3e9ddf2
 
 
+<div align="center">
+
+## 1. Quiz Generation and Analysis
+
+</div>
+
+
+**Feature Description:** Quiz Generation and Analysis is an integral feature of Code Mentor that enhances the learning experience by creating quizzes based on the user's content. The system generates tailored quizzes that evaluate the user's understanding, providing detailed analysis and feedback on their performance. Additionally, users have the option to retake quizzes focused on previously incorrect answers, allowing them to reinforce their knowledge and address weak areas effectively. This adaptive approach ensures continuous learning and improvement.
+
+
+
+https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
+
+
+
+
 
 <div align="center">
 
