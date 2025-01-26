@@ -3,6 +3,7 @@ import { User } from '@/types/user';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import Image from 'next/image';
 import Logo from "@/assets/logo.svg"
+import VoiceButton from '@/components/voice-button';
 
 interface NavbarProps {
   userData: User;
@@ -31,6 +32,7 @@ const Navbar = ({ userData }: NavbarProps) => {
             </span>
           </div>
           <div className="flex items-center space-x-6 pr-2">
+          <VoiceButton />
             <SignedOut>
               <SignInButton mode="modal" />
             </SignedOut>

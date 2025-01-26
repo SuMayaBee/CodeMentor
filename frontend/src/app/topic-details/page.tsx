@@ -59,9 +59,9 @@ const formatResponse = (text: string) => {
   };
 
   const parseMCQs = (content: string): MCQ[] => {
-    const questions = content.match(/<<([\s\S]*?)>>/g) || [];
+    const questions = content.match(/\(\(([\s\S]*?)\)\)/g) || [];
     return questions.map(q => {
-      const questionText = q.replace(/<<|>>/g, '').split('\n')[0].trim();
+      const questionText = q.replace(/\(\(|\)\)/g, '').split('\n')[0].trim();
       const options = q
         .match(/\*[a-d]\)(.*?)(?=\*[a-d]\)|$)/g)
         ?.map(opt => opt.replace(/^\*[a-d]\)/, '').trim()) || [];

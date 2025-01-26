@@ -225,3 +225,8 @@
     @apply h-4 w-4 border rounded-full transition-colors;
   }
 }
+
+.audio-indicator.active {
+  background-color: rgb(139, 92, 246);
+  box-shadow: 0 0 8px rgb(139, 92, 246);
+}
