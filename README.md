@@ -67,6 +67,8 @@ https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 ![Screenshot 2025-01-26 093111](https://github.com/user-attachments/assets/7dc77ab0-6a1e-4100-aeea-94c9d0842122)
 
+<div align="center">
+
 ## 4. AI Voice mentor
 
 </div>
