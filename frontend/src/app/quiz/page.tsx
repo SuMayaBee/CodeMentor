@@ -1,118 +1,77 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Confetti from 'react-confetti';
+import { motion } from 'framer-motion';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 interface QuizQuestion {
+  number: number;
   question: string;
-  options: { label: string; text: string }[];
+  options: { letter: string; text: string }[];
   answer: string;
 }
 
 export default function QuizPage() {
   const searchParams = useSearchParams();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<{[key: number]: string}>({});
-  const [showResults, setShowResults] = useState<{[key: number]: boolean}>({});
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const [wrongAnswers, setWrongAnswers] = useState<QuizQuestion[]>([]);
+  const router = useRouter();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+  });
 
   const parseQuestions = (content: string): QuizQuestion[] => {
-    const questionRegex = /\(\((.*?)\)\)\s*\/box\((\d+[A-D])\)/g;
     const questions: QuizQuestion[] = [];
-    let match;
+    const lines = content.split('\n');
+    let currentQuestion: Partial<QuizQuestion> = {};
+    let options: { letter: string; text: string }[] = [];
 
-    while ((match = questionRegex.exec(content)) !== null) {
-      try {
-        const [, questionText, answer] = match;
-        const [questionPart, ...optionLines] = questionText.split('*');
-        const options = optionLines
-          .filter(line => line && line.includes(')'))
-          .map(line => {
-            const [label, ...text] = line.split(') ');
-            return { 
-              label: label?.trim() || '',
-              text: text.join(') ').trim() 
-            };
-          });
-
-        const question = questionPart.split('.')[1]?.trim() || questionPart;
-        if (question && options.length > 0) {
-          questions.push({ question, options, answer });
+    lines.forEach(line => {
+      // Match question number and text
+      const questionMatch = line.match(/^(\d+)\.\s+(.*)/);
+      if (questionMatch) {
+        if (currentQuestion.question) {
+          questions.push({ ...currentQuestion, options } as QuizQuestion);
+          options = [];
         }
-      } catch (error) {
-        console.error('Error parsing question:', error);
+        currentQuestion = {
+          number: parseInt(questionMatch[1]),
+          question: questionMatch[2].trim()
+        };
       }
-    }
-    return questions;
-  };
-
-  const handleAnswerSelect = (index: number, selectedOption: string) => {
-    const answer = `${index + 1}${selectedOption.toUpperCase()}`;
-    setSelectedAnswers(prev => ({ ...prev, [index]: answer }));
-    setShowResults(prev => ({ ...prev, [index]: true }));
-    
-    if (answer === questions[index].answer) {
-      setScore(prev => prev + 1);
-    } else {
-      setWrongAnswers(prev => [...prev, questions[index]]);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      setQuizCompleted(true);
-    }
-  };
-
-  const handleReturn = async () => {
-    try {
-      if (wrongAnswers.length > 0) {
-        const wrong_questions = wrongAnswers
-          .map(q => `${q.question}\nOptions:\n${q.options.map(o => `${o.label}) ${o.text}`).join('\n')}`)
-          .join('\n\n');
-
-        const chatHistory = [
-          {
-            role: "human",
-            content: "You are a mentor who teaches step-by-step, interactively and adaptively. Use the provided context to explain the topic clearly. Also generate a question after each time u are teaching something. I didn't understand the following questions i got them wrong"
-          },
-          {
-            role: "human",
-            content: wrong_questions
-          }
-        ];
-
-        const response = await fetch('http://localhost:8000/newcontent/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: "",
-            topic: searchParams.get('topic'),
-            chat_history: chatHistory
-          }),
+      
+      // Match options
+      const optionMatch = line.match(/^\s*-\s*([a-d])\)\s*(.*)/i);
+      if (optionMatch) {
+        options.push({
+          letter: optionMatch[1].toUpperCase(),
+          text: optionMatch[2].trim()
         });
-
-        if (!response.ok) throw new Error('Failed to submit answers');
-        const data = await response.json();
-        
-        const queryParams = new URLSearchParams({
-          topic: searchParams.get('topic') || '',
-          chatHistory: encodeURIComponent(JSON.stringify(data.chat_history))
-        }).toString();
-        
-        window.location.href = `/topic-details?${queryParams}`;
-      } else {
-        window.location.href = '/topic-details';
       }
-    } catch (error) {
-      console.error('Error:', error);
+
+      // Match answer
+      const answerMatch = line.match(/\/box\((\d+)([A-D])\)/);
+      if (answerMatch && currentQuestion.number === parseInt(answerMatch[1])) {
+        currentQuestion.answer = answerMatch[2];
+      }
+    });
+
+    // Add last question
+    if (currentQuestion.question) {
+      questions.push({ ...currentQuestion, options } as QuizQuestion);
     }
+
+    return questions;
   };
 
   useEffect(() => {
@@ -128,7 +87,6 @@ export default function QuizPage() {
         if (!response.ok) throw new Error('Failed to fetch quiz');
         const data = await response.json();
         const parsedQuestions = parseQuestions(data.response);
-        if (parsedQuestions.length === 0) throw new Error('No questions found');
         setQuestions(parsedQuestions);
       } catch (error) {
         console.error('Error:', error);
@@ -140,124 +98,256 @@ export default function QuizPage() {
     fetchQuiz();
   }, [searchParams]);
 
+  const handleAnswer = (letter: string) => {
+    const question = questions[currentQuestion];
+    const isCorrect = letter === question.answer;
+    
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2000);
+    } else {
+      setWrongAnswers(prev => [...prev, question]);
+    }
+
+    setUserAnswers(prev => ({
+      ...prev,
+      [currentQuestion]: letter
+    }));
+
+    // Don't auto-advance to next question
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else {
+      const finalScore = (score / questions.length) * 100;
+      setShowResults(true);
+      
+      if (finalScore < 80) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+    }
+  };
+
+  const handleRetry = async () => {
+    if (wrongAnswers.length > 0) {
+      const wrong_questions = wrongAnswers.map(q => 
+        `${q.question}\n${q.options.map(o => `${o.letter}) ${o.text}`).join('\n')}`
+      ).join('\n\n');
+
+      const response = await fetch('http://localhost:8000/newcontent/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: "",
+          topic: searchParams.get('topic'),
+          chat_history: [
+            {
+              role: "human",
+              content: "I need help understanding these questions I got wrong:",
+            },
+            {
+              role: "human",
+              content: wrong_questions
+            }
+          ]
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const queryParams = new URLSearchParams({
+          topic: searchParams.get('topic') || '',
+          chatHistory: encodeURIComponent(JSON.stringify(data.chat_history))
+        }).toString();
+        window.location.href = `/topic-details?${queryParams}`;
+      }
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-violet-950/20 to-gray-950 flex items-center justify-center">
-        <div className="animate-pulse text-violet-400">Loading Quiz...</div>
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-violet-950/20 to-gray-950 p-6 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-violet-500 border-t-transparent"></div>
       </div>
     );
   }
 
-  if (questions.length === 0) {
+ 
+  if (showResults) {
+    const percentage = Math.round((score / questions.length) * 100);
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-violet-950/20 to-gray-950 flex items-center justify-center">
-        <div className="text-red-400">Failed to load questions. Please try again.</div>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-gradient-to-b from-gray-950 via-violet-950/20 to-gray-950 p-6"
+      >
+        <div className="max-w-2xl mx-auto bg-gray-900/30 border border-violet-500/20 backdrop-blur-sm rounded-xl p-8">
+          <div className="flex flex-col items-center">
+            <div className="w-48 h-48 mb-8">
+              <CircularProgressbar
+                value={percentage}
+                text={`${percentage}%`}
+                styles={buildStyles({
+                  pathColor: percentage >= 80 ? '#10B981' : '#EF4444',
+                  textColor: '#8B5CF6',
+                  trailColor: 'rgba(139, 92, 246, 0.1)',
+                })}
+              />
+            </div>
+            <motion.h2 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-2xl font-bold text-violet-400 mb-4"
+            >
+              Quiz Results
+            </motion.h2>
+            <p className="text-xl text-gray-300 mb-6">
+              {percentage >= 80 ? 'Great job! 🎉' : 'Let\'s try again! 💪'}
+            </p>
+            {percentage < 80 && (
+              <p className="text-sm text-violet-400 animate-pulse">
+                Generating new quiz...
+              </p>
+            )}
+            {percentage >= 80 && (
+              <button
+                onClick={handleRetry}
+                className="w-full px-6 py-3 bg-violet-500 text-white rounded-xl hover:bg-violet-600 transition-all"
+              >
+                {wrongAnswers.length > 0 ? 'Review Wrong Answers' : 'Return to Topics'}
+              </button>
+            )}
+          </div>
+        </div>
+      </motion.div>
     );
   }
+
+  const question = questions[currentQuestion];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-violet-950/20 to-gray-950 p-6">
-      <div className="max-w-3xl mx-auto">
-        {quizCompleted ? (
-          <div className="bg-gray-900/30 border border-violet-500/20 backdrop-blur-sm rounded-2xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-violet-400 mb-4">Quiz Completed!</h2>
-            <p className="text-xl text-gray-300 mb-6">Your Score: {score} / {questions.length}</p>
-            <button
-              onClick={handleReturn}
-              className="px-6 py-3 bg-violet-500 text-white rounded-xl hover:bg-violet-600 transition-all"
-            >
-              Return to Topics
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-300">
-                Quiz Progress
-              </h1>
-              <div className="text-violet-400">
-                Question {currentQuestionIndex + 1} of {questions.length} | Score: {score}
-              </div>
-            </div>
-
-            <div className="bg-gray-900/30 border border-violet-500/20 backdrop-blur-sm rounded-2xl p-8">
-              <p className="text-white/90 font-medium mb-8 text-lg">
-                {currentQuestionIndex + 1}. {questions[currentQuestionIndex].question}
-              </p>
-
-              <div className="space-y-4">
-                {questions[currentQuestionIndex].options.map((option) => {
-                  const isSelected = selectedAnswers[currentQuestionIndex] === 
-                    `${currentQuestionIndex + 1}${option.label.toUpperCase()}`;
-                  const showResult = showResults[currentQuestionIndex];
-                  const isCorrect = `${currentQuestionIndex + 1}${option.label.toUpperCase()}` === 
-                    questions[currentQuestionIndex].answer;
-
-                  return (
-                    <label
-                      key={option.label}
-                      className={`flex items-center p-4 rounded-xl cursor-pointer transition-all
-                        ${isSelected && showResult 
-                          ? (isCorrect 
-                            ? 'bg-green-500/20 border border-green-400/30' 
-                            : 'bg-red-500/20 border border-red-400/30')
-                          : 'hover:bg-violet-500/10 border border-violet-500/20'}`}
-                    >
-                      <input
-                        type="radio"
-                        name={`question-${currentQuestionIndex}`}
-                        value={option.label}
-                        checked={isSelected}
-                        onChange={() => handleAnswerSelect(currentQuestionIndex, option.label)}
-                        className="w-4 h-4 text-violet-500 bg-gray-900 border-violet-400/30"
-                        disabled={showResult}
-                      />
-                      <div className="ml-3 flex-1">
-                        <span className="text-gray-300">
-                          {option.label}) {option.text}
-                        </span>
-                        {showResult && isCorrect && (
-                          <span className="ml-2 text-green-400">(Correct Answer)</span>
-                        )}
-                        {showResult && isSelected && !isCorrect && (
-                          <span className="ml-2 text-red-400">(Incorrect)</span>
-                        )}
-                      </div>
-                    </label>
-                  );
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={200}
+        />
+      )}
+  
+      <div className="max-w-3xl mx-auto space-y-8">
+        {/* Header with progress */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16">
+              <CircularProgressbar
+                value={(currentQuestion + 1) / questions.length * 100}
+                text={`${currentQuestion + 1}/${questions.length}`}
+                styles={buildStyles({
+                  pathColor: '#8B5CF6',
+                  textColor: '#8B5CF6',
+                  trailColor: 'rgba(139, 92, 246, 0.1)',
                 })}
-              </div>
-
-              {showResults[currentQuestionIndex] && (
-                <div className="mt-6 p-4 bg-violet-500/10 border border-violet-400/30 rounded-xl">
-                  <p className="text-violet-300">
-                    <span className="font-semibold">Correct Answer:</span>{' '}
-                    Option {questions[currentQuestionIndex].answer.slice(-1)}
-                  </p>
-                </div>
-              )}
-
-              <div className="flex justify-between mt-8">
-                <button
-                  onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                  disabled={currentQuestionIndex === 0}
-                  className="px-6 py-3 bg-violet-500/20 border border-violet-400/30 text-violet-300 
-                           rounded-xl disabled:opacity-50 hover:bg-violet-500/30 transition-all"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNext}
-                  disabled={!selectedAnswers[currentQuestionIndex]}
-                  className="px-6 py-3 bg-violet-500 text-white rounded-xl 
-                           disabled:opacity-50 hover:bg-violet-600 transition-all"
-                >
-                  {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next'}
-                </button>
-              </div>
+              />
             </div>
-          </>
+            <div className="text-violet-400 font-medium">
+              Progress
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-violet-400 font-medium">Score</div>
+            <div className="w-16 h-16">
+              <CircularProgressbar
+                value={(score / questions.length) * 100}
+                text={`${score}`}
+                styles={buildStyles({
+                  pathColor: '#10B981',
+                  textColor: '#8B5CF6',
+                  trailColor: 'rgba(139, 92, 246, 0.1)',
+                })}
+              />
+            </div>
+          </div>
+        </div>
+  
+        {/* Question card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gray-900/30 border border-violet-500/20 backdrop-blur-sm rounded-xl overflow-hidden"
+        >
+          <div className="p-6 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 border-b border-violet-500/20">
+            <h2 className="text-xl font-medium text-gray-200">
+              {question.question}
+            </h2>
+          </div>
+          
+          <div className="p-6 space-y-4">
+            {question.options.map(option => {
+              const isAnswered = userAnswers[currentQuestion] !== undefined;
+              const isSelected = userAnswers[currentQuestion] === option.letter;
+              const isCorrect = option.letter === question.answer;
+  
+              return (
+                <motion.button
+                  key={option.letter}
+                  onClick={() => !isAnswered && handleAnswer(option.letter)}
+                  disabled={isAnswered}
+                  whileHover={!isAnswered ? { scale: 1.02 } : {}}
+                  className={`w-full p-4 rounded-xl text-left transition-all flex items-center gap-4
+                    ${isAnswered
+                      ? isCorrect
+                        ? 'bg-green-500/20 border border-green-500/30'
+                        : isSelected
+                          ? 'bg-red-500/20 border border-red-500/30'
+                          : 'opacity-50'
+                      : 'hover:bg-violet-500/20 border border-violet-500/20'
+                    } ${isAnswered ? 'cursor-default' : 'cursor-pointer'}`}
+                >
+                  <span className="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center border border-violet-500/30">
+                    <span className="text-violet-300 font-medium">{option.letter}</span>
+                  </span>
+                  <span className="text-gray-300">{option.text}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
+  
+        {/* Next button */}
+        {userAnswers[currentQuestion] !== undefined && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-end"
+          >
+            <button
+              onClick={handleNext}
+              className="px-8 py-3 bg-violet-500 text-white rounded-xl hover:bg-violet-600 
+                       transition-all flex items-center gap-2"
+            >
+              {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </motion.div>
         )}
       </div>
     </div>
