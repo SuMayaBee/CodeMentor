@@ -30,7 +30,7 @@ https://github.com/user-attachments/assets/f55364ca-d12b-4b00-bdf6-aadcc3e9ddf2
 
 <div align="center">
 
-## 1. Quiz Generation and Analysis
+## 2. Quiz Generation and Analysis
 
 </div>
 
@@ -41,13 +41,27 @@ https://github.com/user-attachments/assets/f55364ca-d12b-4b00-bdf6-aadcc3e9ddf2
 
 https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
+<div align="center">
+
+## 3. Adaptive Mentoring with Logical Reasoning
+
+</div>
+
+
+**Feature Description:** Adaptive Mentoring with Logical Reasoning is a key feature of Code Mentor. The AI tailors the learning journey based on the user's performance, employing logical reasoning to determine the next steps. As users progress, the system adapts the mentoring content to their needs, ensuring they build on their strengths and address any weaknesses. This dynamic approach provides a personalized and continuous learning experience, guiding users through their educational journey with precision and insight.
+
+
+
+
+
+https://github.com/user-attachments/assets/00600570-bab4-4122-a2e7-2a98e178389a
 
 
 
 
 <div align="center">
 
-## 1. User Roadmap Creation:
+## 4. User Roadmap Creation:
 
 </div>
 
@@ -67,7 +81,7 @@ https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
 <div align="center">
   
-## 2. Content Generation (Theory, Syntax, Example Code):
+## 5. Content Generation (Theory, Syntax, Example Code):
 
 </div>
 
@@ -91,7 +105,7 @@ https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
 <div align="center">
   
-## 3. Code Editor and CodeMentor:
+## 6. Code Editor and CodeMentor:
 
 </div>
 
@@ -110,7 +124,7 @@ https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
 <div align="center">
   
-## 4. Code Mentorship Agent:
+## 7. Code Mentorship Agent:
 
 </div>
 
@@ -129,7 +143,7 @@ https://github.com/user-attachments/assets/f433f95b-5fab-4b69-89e2-515b7fdbfe21
 
 <div align="center">
   
-## 5. User Authentication and Profile Management:
+## 8. User Authentication and Profile Management:
 
 </div>
 
