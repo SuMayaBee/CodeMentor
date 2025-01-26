@@ -13,21 +13,27 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 
 Here's how it works:
 
+<div align="center">
+
+## 1. Live Coding Feedback
+
+</div>
+
+
+
+**Feature Description:** Live Coding Feedback in Code Mentor offers real-time, interactive guidance as users write code. The system analyzes the code continuously, providing instant feedback on errors and inefficiencies. When issues are detected, they are highlighted with clear, concise explanations. Additionally, AI-guided hints help users solve coding problems by providing step-by-step guidance without revealing the full solution. This feature aims to enhance the learning experience by quickly identifying mistakes and developing problem-solving skills.
+
+
+
+https://github.com/user-attachments/assets/f55364ca-d12b-4b00-bdf6-aadcc3e9ddf2
+
+
 
 <div align="center">
 
 ## 1. User Roadmap Creation:
 
 </div>
-
-
-**Feature Description:** Users can create personalized roadmaps for learning a specific programming language or concept, such as "I want to learn C++." The roadmap consists of a list of topics (e.g., syntax, loops, functions) tailored to the user's learning journey.
-
-**Stack Usage:**
-- **Frontend (Next.js):** Users input their desired learning path, and the frontend sends a request to the backend to generate the roadmap.
-- **Backend (FastAPI):** FastAPI handles the incoming request, triggering the Roadmap Agent (powered by OpenAI Swarm) to generate a topic list for the selected language.
-- **Database (PostgreSQL):** The generated roadmap (topics) is stored in PostgreSQL under the user's profile for easy retrieval.
-- **Prisma:** Prisma ORM interacts with PostgreSQL to efficiently manage and query the user’s roadmap data.
 
 ![Screenshot 2025-01-17 234545](https://github.com/user-attachments/assets/ef1c401e-26e8-4cb3-8d37-6d714cd2a601)
 
