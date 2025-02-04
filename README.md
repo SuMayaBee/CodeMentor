@@ -11,7 +11,7 @@ CodeMentor is designed to bridge these gaps by offering an AI-powered, interacti
 ![Screenshot 2025-01-17 235458](https://github.com/user-attachments/assets/ea416e41-d653-4a9f-aa11-92cb19d80e02)
 
 
-Here's how it works:
+Here are the features of the Project:
 
 <div align="center">
 
