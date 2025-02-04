@@ -223,16 +223,6 @@ Before you start, ensure that you have the following installed:
 
    The frontend and backend will now be running. You can access them at the URLs specified in the `docker-compose.yaml` file (commonly `http://localhost:3000` for the frontend and `http://localhost:8000` for the backend).
 
-## Teammates
-
-The CodeMentor project was developed by the following team members:
-
-- **MD Tamim Sarkar** - Team Lead, Role: AI and Backend [Linkedin](https://www.linkedin.com/in/tam1m/)
-- **Sumaiya Islam** - Member, Role: Frontend and Backend [Linkedin](https://www.linkedin.com/in/sumaiya-islam-freelancer/)
-- **Fabliha Sarwar** - Member, Role: Backend [Linkedin](https://www.linkedin.com/in/fabliha-afaf-sarwar/)
-- **Abdullah Al Jilan** - Member, Role: Backend [Linkedin](https://www.linkedin.com/in/abdullah-all-jilan/)
-
-Feel free to add or update your details in this section!
 
 ## Troubleshooting
 
