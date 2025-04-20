@@ -1,6 +1,6 @@
 <div align="center">
   
-# CloudCollab IDE
+# CodeMentor
 
 </div>
 
